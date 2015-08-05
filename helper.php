@@ -77,3 +77,6 @@ function uploadImg($file_data, $name){
     }
     return $res;
 }
+
+
+
