@@ -35,7 +35,7 @@ class Csvdb{
     foreach ( $this->_splfileobj as $key => $line ) {
 
       // 空行スキップ
-      if(count(array_count_values($line)) === 0)continue;
+      //if(count(array_count_values($line)) === 0)continue;
 
       // 文字コード変更
       mb_convert_variables("UTF-8", array("ASCII","JIS","UTF-8","EUC-JP","SJIS"), $line);
@@ -50,7 +50,7 @@ class Csvdb{
 
       //該当しない条件項目の指定があればスキップ
       foreach ($serach as $key => $value) {
-        if(!array_search($key, $column_names)){
+        if(array_search($key, $column_names) !== false){
           continue 2;
         }
       }
