@@ -3,7 +3,7 @@
 /**
  * CSVからのデータ抽出（登録機能なし）
  */
-class Csvdb{
+class CsvDb{
   private static $_splfileobjs = array();
   private $_splfileobj;
   private $_has_clumn_name;
@@ -35,7 +35,7 @@ class Csvdb{
     foreach ( $this->_splfileobj as $key => $line ) {
 
       // 空行スキップ
-      //if(count(array_count_values($line)) === 0)continue;
+      if(count($line) === 1 && empty($line[0]))continue;
 
       // 文字コード変更
       mb_convert_variables("UTF-8", array("ASCII","JIS","UTF-8","EUC-JP","SJIS"), $line);
@@ -50,11 +50,10 @@ class Csvdb{
 
       //該当しない条件項目の指定があればスキップ
       foreach ($serach as $key => $value) {
-        if(array_search($key, $column_names) !== false){
+        if(array_search($key, $column_names) === false){
           continue 2;
         }
       }
-
       // AND検索
       if(!$type || $type == self::SERCH_TYPE_AND){
         foreach ($line as $line_key => $value) {
@@ -95,6 +94,11 @@ class Csvdb{
     if($this->_has_clumn_name){
       $column_names = $columns;
       mb_convert_variables("UTF-8", array("ASCII","JIS","UTF-8","EUC-JP","SJIS"), $column_names);
+      foreach ($column_names as $k => &$v) {
+        if(strlen($v) == 0){
+          $v = $k;
+        }
+      }
     }else{
       $column_names = array_keys($columns);
     }
@@ -110,6 +114,3 @@ class Csvdb{
   }
 
 }
-
-$v = new Csvdb(dirname(__FILE__) . '/20160628.csv', true);
-var_dump($v->findSerach(array('雇用形態'=>'正社員')));
