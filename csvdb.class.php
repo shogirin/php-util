@@ -80,6 +80,43 @@ class CsvDb{
     return $res;
   }
 
+  public function insert(array $data){
+
+    if(!$this->_splfileobj->isWritable()){
+      return false;
+    }
+    $fileobj = $this->_splfileobj->openFile('a');
+    $fileobj->fputcsv($data);
+    return true;
+  }
+
+  public function inserts(array $data){
+    if(!$this->_splfileobj->isWritable()){
+      return false;
+    }
+    $fileobj = $this->_splfileobj->openFile('a');
+    foreach($data as $line){
+      $fileobj->fputcsv($line);
+    }
+    return true;
+  }
+
+  public static function create($file, $data, $has_clumn_name = false){
+    touch($file);
+    $file = new SplFileObject($file, 'w');
+    if(count($data) > 0 && !$file->isWritable()){
+      delete($file);
+      return false;
+    }
+    if($has_clumn_name){
+      $file->fputcsv(array_keys($data[0]));
+    }
+    foreach ($data as $line) {
+        $file->fputcsv($line);
+    }
+    return true;
+  }
+
   private static function _connect($path){
     if(!isset(self::$_splfileobjs[$path])){
       self::$_splfileobjs[$path] = new SplFileObject($path);
