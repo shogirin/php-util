@@ -16,6 +16,7 @@ class PDOWrap extends PDO {
             self::$conn = new PDOWrap();
             self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
+        return self::$conn;
     }
 
     public function createStatement($sql, $bind = array()) {
